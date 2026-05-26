@@ -1,17 +1,24 @@
 using SemanticSearchApi.Data;
 using SemanticSearchApi.Repositories;
+using Npgsql;
+using Pgvector.Dapper;
+using Dapper;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddControllers();
 // Helps ASP.NET discover API endpoints.
 builder.Services.AddEndpointsApiExplorer();
 // Generates Swagger/OpenAPI documentation.
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<DbConnectionFactory>();
-builder.Services.AddControllers();
+
+NpgsqlConnection.GlobalTypeMapper.UseVector();
+
+SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
 builder.Services.AddScoped<DocumentRepository>();
+
 
 var app = builder.Build();
 

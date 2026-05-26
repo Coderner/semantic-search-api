@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SemanticSearchApi.Models;
 using SemanticSearchApi.Repositories;
+using Pgvector;
 
 namespace SemanticSearchApi.Controllers;
 
@@ -18,11 +19,19 @@ public class DocumentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddChunk([FromBody] AddChunkRequestDTO requestDTO)
     {
-        var id = await _repository.AddChunkAsync(requestDTO.Content);
+        var randomValues = new float[1536];
+
+        for (int i = 0; i < randomValues.Length; i++)
+        {
+            randomValues[i] = Random.Shared.NextSingle();
+        }
+
+        var embedding = new Vector(randomValues);
+        var id = await _repository.AddChunkAsync(requestDTO.Content, embedding);
 
         return Ok(new
         {
-            Message = "Chunk added",
+            Message = "Chunk added with embedding",
             Id = id
         });
     }

@@ -1,3 +1,4 @@
+using Pgvector;
 namespace SemanticSearchApi.Models;
 
 public class DocumentChunk
@@ -5,4 +6,5 @@ public class DocumentChunk
     public int Id {get; set;}
     public string Content {get; set;} = string.Empty;
     public DateTime CreatedAt {get; set;}
+    public Vector? Embedding { get; set; }
 }
