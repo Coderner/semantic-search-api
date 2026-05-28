@@ -1,5 +1,6 @@
 using SemanticSearchApi.Data;
 using SemanticSearchApi.Repositories;
+using SemanticSearchApi.Services;
 using Npgsql;
 using Pgvector.Dapper;
 using Dapper;
@@ -13,11 +14,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<DbConnectionFactory>();
 
+#pragma warning disable CS0618 // Type or member is obsolete
 NpgsqlConnection.GlobalTypeMapper.UseVector();
+#pragma warning restore CS0618 // Type or member is obsolete
 
 SqlMapper.AddTypeHandler(new VectorTypeHandler());
 
 builder.Services.AddScoped<DocumentRepository>();
+builder.Services.AddHttpClient<EmbeddingService>();
 
 
 var app = builder.Build();

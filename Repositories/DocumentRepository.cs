@@ -39,8 +39,7 @@ public class DocumentRepository
         return await connection.QueryAsync<DocumentChunk>(sql);
     }
 
-    public async Task<IEnumerable<DocumentChunk>> SearchSimilarAsync(
-    Vector queryEmbedding)
+    public async Task<IEnumerable<DocumentChunk>> SearchSimilarAsync(Vector queryEmbedding)
     {
         using var connection = _dbFactory.CreateConnection();
 
