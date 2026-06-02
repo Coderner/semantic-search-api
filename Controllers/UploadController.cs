@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using SemanticSearchApi.Repositories;
 using SemanticSearchApi.Services;
 
 namespace SemanticSearchApi.Controllers;
@@ -8,18 +7,11 @@ namespace SemanticSearchApi.Controllers;
 [Route("api/[controller]")]
 public class UploadController : ControllerBase
 {
-    private readonly DocumentRepository _repository;
-    private readonly EmbeddingService _embeddingService;
-    private readonly TextChunkingService _textChunkingService;
+    private readonly DocumentIngestionService _documentIngestionService;
 
-    public UploadController(
-        DocumentRepository repository,
-        EmbeddingService embeddingService,
-        TextChunkingService textChunkingService)
+    public UploadController(DocumentIngestionService documentIngestionService)
     {
-        _repository = repository;
-        _embeddingService = embeddingService;
-        _textChunkingService = textChunkingService;
+        _documentIngestionService = documentIngestionService;
     }
 
     [HttpPost("txt")]
@@ -37,18 +29,7 @@ public class UploadController : ControllerBase
             text = await reader.ReadToEndAsync();
         }
 
-        var chunks = _textChunkingService.ChunkText(text);
-
-        var insertedChunkIds = new List<int>();
-
-        foreach (var chunk in chunks)
-        {
-            var embedding = await _embeddingService.GenerateEmbeddingAsync(chunk);
-
-            var id = await _repository.AddChunkAsync(chunk,embedding);
-
-            insertedChunkIds.Add(id);
-        }
+        var insertedChunkIds = await _documentIngestionService.IngestAsync(text);
 
         return Ok(new
         {

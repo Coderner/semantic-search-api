@@ -23,7 +23,7 @@ SqlMapper.AddTypeHandler(new VectorTypeHandler());
 builder.Services.AddScoped<DocumentRepository>();
 builder.Services.AddHttpClient<EmbeddingService>();
 builder.Services.AddScoped<TextChunkingService>();
-
+builder.Services.AddScoped<DocumentIngestionService>();
 
 var app = builder.Build();
 

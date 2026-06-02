@@ -11,32 +11,19 @@ namespace SemanticSearchApi.Controllers;
 public class DocumentsController : ControllerBase
 {
     private readonly DocumentRepository _repository;
-    private readonly EmbeddingService _embeddingService;
-    private readonly TextChunkingService _textChunkingService;
+    private readonly DocumentIngestionService _documentIngestionService;
 
-    public DocumentsController(
-        DocumentRepository repository, 
-        EmbeddingService embeddingService, 
-        TextChunkingService textChunkingService)
+    public DocumentsController(DocumentRepository repository, DocumentIngestionService documentIngestionService)
     {
         _repository = repository;
-        _embeddingService = embeddingService;
-        _textChunkingService = textChunkingService;
+        _documentIngestionService = documentIngestionService;
     }
 
     [HttpPost]
     public async Task<IActionResult> AddChunk([FromBody] AddChunkRequestDTO requestDTO)
     {
-        var chunks = _textChunkingService.ChunkText(requestDTO.Content);
-        var insertedChunkIds = new List<int>();
+        var insertedChunkIds = await _documentIngestionService.IngestAsync(requestDTO.Content);
 
-        foreach (var chunk in chunks)
-        {
-             var embedding = await _embeddingService.GenerateEmbeddingAsync(chunk);
-             var id = await _repository.AddChunkAsync(chunk, embedding);
-             insertedChunkIds.Add(id);
-        }
-        
         return Ok(new
         {
             Message = "Text Chunked and Stored",
