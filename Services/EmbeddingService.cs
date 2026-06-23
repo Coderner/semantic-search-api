@@ -15,8 +15,7 @@ public class EmbeddingService
 
     public async Task<Vector> GenerateEmbeddingAsync(string text)
     {
-        var requestBody = new
-        {
+        var requestBody = new{
             model = "nomic-embed-text",
             prompt = text
         };
@@ -27,10 +26,7 @@ public class EmbeddingService
             "application/json"
         );
 
-        var response = await _httpClient.PostAsync(
-            "http://localhost:11434/api/embeddings",
-            content
-        );
+        var response = await _httpClient.PostAsync("http://localhost:11434/api/embeddings",content);
 
         response.EnsureSuccessStatusCode(); 
         //throws exception for failure otherwise errors continue silently

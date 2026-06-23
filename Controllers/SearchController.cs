@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Pgvector;
 using SemanticSearchApi.Repositories;
 using SemanticSearchApi.Services;
 
