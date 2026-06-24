@@ -37,11 +37,6 @@ public class OllamaLLMService
 
         var response = await _httpClient.PostAsync("http://localhost:11434/api/generate",content);
 
-       var responseText = await response.Content.ReadAsStringAsync();
-
-        Console.WriteLine($"Status: {response.StatusCode}");
-        Console.WriteLine(responseText);
-
         response.EnsureSuccessStatusCode();
 
         var json = await response.Content.ReadAsStringAsync();

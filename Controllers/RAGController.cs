@@ -1,25 +1,36 @@
 using Microsoft.AspNetCore.Mvc;
+using SemanticSearchApi.Repositories;
 using SemanticSearchApi.Services;
+using System.Diagnostics;
 
 namespace SemanticSearchApi.Controllers;
 public class RAGController : ControllerBase
 {
     private readonly OllamaLLMService _ollamaLLMService;
+    private readonly EmbeddingService _embeddingService;
+    private readonly DocumentRepository _documentRepository;
 
-    public RAGController(OllamaLLMService ollamaLLMService)
+    public RAGController(
+        OllamaLLMService ollamaLLMService, 
+        EmbeddingService embeddingService, 
+        DocumentRepository documentRepository
+    )
     {
         _ollamaLLMService = ollamaLLMService;
+        _embeddingService = embeddingService;
+        _documentRepository = documentRepository;
     }
 
-    [HttpGet("test-llm")]
-    public async Task<IActionResult> TestLlm()
+    [HttpPost("ask")]
+    public async Task<IActionResult> Ask([FromBody] string question)
     {
-        var answer = await _ollamaLLMService.GenerateAnswerAsync(
-            "What is the leave policy?",
-            new List<string>
-            {
-                "Employees are entitled to 20 paid leaves annually."
-            });
+        var queryEmbedding = await _embeddingService.GenerateEmbeddingAsync(question);
+
+        var searchResults = await _documentRepository.SearchSimilarAsync(queryEmbedding);
+
+        var contextChunks = searchResults.Select(x => x.Content).ToList();
+
+        var answer = await _ollamaLLMService.GenerateAnswerAsync(question, contextChunks);
 
         return Ok(answer);
     }
