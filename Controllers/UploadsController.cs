@@ -5,17 +5,17 @@ namespace SemanticSearchApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UploadController : ControllerBase
+public class UploadsController : ControllerBase
 {
     private readonly DocumentIngestionService _documentIngestionService;
 
-    public UploadController(DocumentIngestionService documentIngestionService)
+    public UploadsController(DocumentIngestionService documentIngestionService)
     {
         _documentIngestionService = documentIngestionService;
     }
 
-    [HttpPost("txt")]
-    public async Task<IActionResult> UploadTxtFile(IFormFile file)
+    [HttpPost("text")]
+    public async Task<IActionResult> UploadTextFileAsync(IFormFile file)
     {
         if (file == null || file.Length == 0)
         {

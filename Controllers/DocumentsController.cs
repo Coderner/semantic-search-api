@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using SemanticSearchApi.Models;
 using SemanticSearchApi.Repositories;
 using SemanticSearchApi.Services;
-using Pgvector;
-
 namespace SemanticSearchApi.Controllers;
 
 [ApiController]
@@ -20,7 +18,7 @@ public class DocumentsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddChunk([FromBody] AddChunkRequestDTO requestDTO)
+    public async Task<IActionResult> IngestDocumentAsync([FromBody] AddChunkRequestDTO requestDTO)
     {
         var insertedChunkIds = await _documentIngestionService.IngestAsync(requestDTO.Content);
 
@@ -33,7 +31,7 @@ public class DocumentsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetChunks()
+    public async Task<IActionResult> GetAllChunksAsync()
     {
         var chunks = await _repository.GetAllChunksAsync();
 

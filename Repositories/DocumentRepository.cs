@@ -14,7 +14,7 @@ public class DocumentRepository
         _dbFactory = dbFactory;
     }
 
-    public async Task<int> AddChunkAsync(string content, Vector embedding)
+    public async Task<int> AddChunksAsync(string content, Vector embedding)
     {
         using var connection = _dbFactory.CreateConnection();
 
@@ -39,7 +39,7 @@ public class DocumentRepository
         return await connection.QueryAsync<DocumentChunk>(sql);
     }
 
-    public async Task<IEnumerable<SearchResultDTO>> SearchSimilarAsync(Vector queryEmbedding)
+    public async Task<IEnumerable<SearchResultDTO>> SearchSimilarChunksAsync(Vector queryEmbedding)
     {
         using var connection = _dbFactory.CreateConnection();
 

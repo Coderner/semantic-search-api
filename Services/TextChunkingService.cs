@@ -2,7 +2,7 @@ namespace SemanticSearchApi.Services;
 
 public class TextChunkingService
 {
-    public List<string> ChunkText(string text,int chunkSize = 200, int overlap =50)
+    public List<string> CreateTextChunks(string text,int chunkSize = 200, int overlap =50)
     {
         var chunks = new List<string>();
 

@@ -18,11 +18,11 @@ public class SearchController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Search([FromBody] string query)
+    public async Task<IActionResult> SearchSimilarAsync([FromBody] string query)
     {
         var queryEmbedding = await _embeddingService.GenerateEmbeddingAsync(query);
 
-        var results = await _repository.SearchSimilarAsync(queryEmbedding);
+        var results = await _repository.SearchSimilarChunksAsync(queryEmbedding);
 
         return Ok(results);
     }

@@ -21,13 +21,13 @@ public class DocumentIngestionService
 
     public async Task<List<int>> IngestAsync(string text)
     {
-        var chunks = _textChunkingService.ChunkText(text);
+        var chunks = _textChunkingService.CreateTextChunks(text);
         var insertedChunkIds = new List<int>();
 
         foreach (var chunk in chunks)
         {
              var embedding = await _embeddingService.GenerateEmbeddingAsync(chunk);
-             var id = await _documentRepository.AddChunkAsync(chunk, embedding);
+             var id = await _documentRepository.AddChunksAsync(chunk, embedding);
              insertedChunkIds.Add(id);
         }
 
