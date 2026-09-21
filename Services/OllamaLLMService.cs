@@ -5,10 +5,12 @@ namespace SemanticSearchApi.Services;
 public class OllamaLLMService
 {
     private readonly HttpClient _httpClient;
+    private readonly string _baseUrl;
 
-    public OllamaLLMService(HttpClient httpClient)
+    public OllamaLLMService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _baseUrl = configuration["Ollama:BaseUrl"] ?? "http://localhost:11434";
     }
     public async Task<string> GenerateAnswerAsync(string question, List<string> contextChunks)
     {
@@ -35,7 +37,7 @@ public class OllamaLLMService
             "application/json"
         );
 
-        var response = await _httpClient.PostAsync("http://localhost:11434/api/generate",content);
+        var response = await _httpClient.PostAsync($"{_baseUrl}/api/generate",content);
 
         response.EnsureSuccessStatusCode();
 

@@ -7,10 +7,12 @@ namespace SemanticSearchApi.Services;
 public class EmbeddingService
 {
     private readonly HttpClient _httpClient;
+    private readonly string _baseUrl;
 
-    public EmbeddingService(HttpClient httpClient)
+    public EmbeddingService(HttpClient httpClient, IConfiguration configuration)
     {
         _httpClient = httpClient;
+        _baseUrl = configuration["Ollama:BaseUrl"] ?? "http://localhost:11434";
     }
 
     public async Task<Vector> GenerateEmbeddingAsync(string text)
@@ -26,7 +28,7 @@ public class EmbeddingService
             "application/json"
         );
 
-        var response = await _httpClient.PostAsync("http://localhost:11434/api/embeddings",content);
+        var response = await _httpClient.PostAsync($"{_baseUrl}/api/embeddings",content);
 
         response.EnsureSuccessStatusCode(); 
         //throws exception for failure otherwise errors continue silently
