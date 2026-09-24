@@ -30,13 +30,10 @@ var app = builder.Build();
 
 app.MapControllers();
 
-if (app.Environment.IsDevelopment())
-{
-    // Creates the OpenAPI JSON endpoint.
-    app.UseSwagger();
-    // Creates the browser UI.
-    app.UseSwaggerUI();
-}
+// Creates the OpenAPI JSON endpoint.
+app.UseSwagger();
+// Creates the browser UI.
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

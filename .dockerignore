@@ -1,4 +1,7 @@
 bin/
 obj/
-appsettings.Development.json
 .env
+*.md
+.gitignore
+appsettings.Development.json
+Properties/
